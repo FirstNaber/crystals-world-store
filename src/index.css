@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* Palette pulled from the storefront's neon sign (purple, chartreuse glow, cyan, pink)
+   and from the stones themselves (lapis, amethyst, citrine). Kept flat and bold on purpose. */
+@theme {
+  --color-ink: #14101f;
+  --color-paper: #fffaf0;
+  --color-cream: #f6ecd6;
+  --color-sign: #5b21d6;       /* neon-sign purple */
+  --color-amethyst: #7c3aed;
+  --color-lapis: #1e40c8;
+  --color-lime: #c6ff3d;       /* the sign's chartreuse glow */
+  --color-citrine: #f5a524;
+  --color-pink: #ff5c8a;
+  --color-cyan: #2fe3d2;
+  --color-muted: #5a5470;      /* AA on paper */
+
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em; line-height: 0.98; }
+  :focus-visible { outline: 3px solid var(--color-sign); outline-offset: 3px; border-radius: 6px; }
+  ::selection { background: var(--color-lime); color: var(--color-ink); }
+  button { cursor: pointer; }
+}
+
+@layer components {
+  .wrap { @apply mx-auto w-full max-w-[1240px] px-4 sm:px-6 lg:px-8; }
+  .eyebrow { font-family: var(--font-mono); @apply text-[12px] font-medium uppercase tracking-[0.14em]; }
+  /* sticker-style surfaces */
+  .card { @apply rounded-2xl border-2 border-ink bg-paper; box-shadow: 4px 4px 0 var(--color-ink); }
+  .btn { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-ink px-6 py-3 font-bold transition-transform duration-150 active:translate-y-0.5; font-family: var(--font-display); box-shadow: 3px 3px 0 var(--color-ink); }
+  .btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--color-ink); }
+  .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--color-ink); }
+  .btn-lime { background: var(--color-lime); color: var(--color-ink); }
+  .btn-ink { background: var(--color-ink); color: var(--color-paper); box-shadow: 3px 3px 0 var(--color-sign); }
+  .btn-paper { background: var(--color-paper); color: var(--color-ink); }
+  .btn[disabled] { opacity: .55; cursor: not-allowed; box-shadow: none; transform: none; }
+  .chip { @apply inline-flex items-center rounded-full border-2 border-ink px-3 py-1 text-[13px] font-bold; }
+  .input { @apply min-h-12 w-full rounded-xl border-2 border-ink bg-paper px-4 py-3 text-base; }
+  .placeholder-tag { font-family: var(--font-mono); @apply rounded border border-dashed border-sign bg-lime/40 px-1.5 py-0.5 text-[12px]; }
+}
+
+/* the light-catching hover on stones: a highlight that follows the pointer */
+.shine { position: relative; overflow: hidden; --mx: 50%; --my: 50%; }
+.shine::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .25s;
+  background: radial-gradient(180px circle at var(--mx) var(--my), rgba(255,255,255,.55), rgba(255,255,255,.12) 40%, transparent 65%);
+  mix-blend-mode: soft-light;
+}
+.shine:hover::after { opacity: 1; }
+
+@keyframes wobble { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.wobble { animation: wobble 4s ease-in-out infinite; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+}
